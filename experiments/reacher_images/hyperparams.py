@@ -56,7 +56,7 @@ CONDITIONS = 4
 np.random.seed(14)
 pos_body_offset = []
 for _ in range(CONDITIONS):
-    pos_body_offset.append(np.array([0.4*np.random.rand()-0.3, 0.4*np.random.rand()-0.1, 0]))
+    pos_body_offset.append([np.array([0.4*np.random.rand()-0.3, 0.4*np.random.rand()-0.1, 0])])
 
 common = {
     'experiment_name': 'my_experiment' + '_' + \
@@ -92,7 +92,8 @@ agent = {
     'image_height': IMAGE_HEIGHT,
     'image_channels': IMAGE_CHANNELS,
     'sensor_dims': SENSOR_DIMS,
-    'camera_pos': np.array([0., 0., 1.5, 0., 0., 0.]),
+    #'camera_pos': np.array([0., 0., 1.5, 0., 0., 0.]),
+    'camera_pos': np.array([0., 0., 0., 1., -90., 90.]),
     'record_reward': True,
 }
 
@@ -110,7 +111,7 @@ algorithm = {
     'plot_dir': EXP_DIR,
     'agent_pos_body_idx': agent['pos_body_idx'],
     'agent_pos_body_offset': agent['pos_body_offset'],
-    'target_end_effector': [np.concatenate([np.array([.1, -.1, .01])+ agent['pos_body_offset'][i], np.array([0., 0., 0.])])
+    'target_end_effector': [np.concatenate([np.array([.1, -.1, .01])+ agent['pos_body_offset'][i][0], np.array([0., 0., 0.])])
                             for i in xrange(CONDITIONS)],
 }
 
@@ -149,7 +150,7 @@ torque_cost_1 = [{
 
 fk_cost_1 = [{
     'type': CostFK,
-    'target_end_effector': np.concatenate([np.array([.1, -.1, .01])+ agent['pos_body_offset'][i], np.array([0., 0., 0.])]),
+    'target_end_effector': np.concatenate([np.array([.1, -.1, .01])+ agent['pos_body_offset'][i][0], np.array([0., 0., 0.])]),
     'wp': np.array([1, 1, 1, 0, 0, 0]),
     'l1': 1.0,
     'l2': 0.0,
@@ -160,7 +161,7 @@ fk_cost_1 = [{
 algorithm['cost'] = [{
     'type': CostSum,
     'costs': [torque_cost_1[i], fk_cost_1[i]],
-    'weights': [2.0, 1.0],
+    'weights': [20.0, 1.0],
 }  for i in range(common['conditions'])]
 
 algorithm['dynamics'] = {
