@@ -6,6 +6,7 @@
 	</default>
 	<option gravity="0 0 -9.81" integrator="RK4" timestep="0.01"/>
 	<worldbody>
+		<light diffuse=".5 .5 .5" pos="0 0 2" dir="0 0 -1"/> 
 		<!-- Arena -->
 		<geom conaffinity="0" fromto="-.3 -.3 .01 .3 -.3 .01" name="sideS" rgba="0.9 0.4 0.6 1" size=".02" type="capsule"/>
 		<geom conaffinity="0" fromto=" .3 -.3 .01 .3  .3 .01" name="sideE" rgba="0.9 0.4 0.6 1" size=".02" type="capsule"/>
