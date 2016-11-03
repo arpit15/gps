@@ -93,7 +93,6 @@ class AgentMuJoCo(Agent):
 
 
         cam_pos = self._hyperparams['camera_pos']
-
         self._viewer_main = mujoco_py.MjViewer(visible=True, init_width=AGENT_MUJOCO['image_width'], 
                     init_height=AGENT_MUJOCO['image_height'])
         #self._viewer_main.start()
@@ -111,13 +110,7 @@ class AgentMuJoCo(Agent):
             for i in range(self._hyperparams['conditions']):
                 self._viewer[i].start()
                 self._viewer[i].set_model(self._model[i])
-
-                for j in range(3):
-                    self._viewer[i].cam.lookat[j] = cam_pos[j]
-                self._viewer[i].cam.distance = cam_pos[3]
-                self._viewer[i].cam.elevation = cam_pos[4]
-                self._viewer[i].cam.azimuth = cam_pos[5]
-                self._viewer[i].cam.trackbodyid = -1
+                self._set_cam_position(self._viewer[i], cam_pos)
 
                 for j in range(5):
                     self._viewer[i].render()
@@ -167,12 +160,10 @@ class AgentMuJoCo(Agent):
 
         if RGB_IMAGE in self.obs_data_types or CONTEXT_IMAGE in self.obs_data_types:
             self._viewer_bot.set_model(self._model[condition])
-            for i in range(3):
-                self._viewer_bot.cam.lookat[i] = cam_pos[i]
-            self._viewer_bot.cam.distance = cam_pos[3]
-            self._viewer_bot.cam.elevation = cam_pos[4]
-            self._viewer_bot.cam.azimuth = cam_pos[5]
-            self._viewer_bot.cam.trackbodyid = -1
+            self._set_cam_position(self._viewer_bot, cam_pos)
+        else:
+            self._set_cam_position(self._viewer_main, cam_pos)
+
 
         # Take the sample.
         for t in range(self.T):
@@ -344,3 +335,12 @@ class AgentMuJoCo(Agent):
         img = obs[imstart:imend]
         img = img.reshape((image_width, image_height, image_channels))
         return img
+
+    def _set_cam_position(self, viewer, cam_pos):
+
+        for i in range(3):
+            viewer.cam.lookat[i] = cam_pos[i]
+        viewer.cam.distance = cam_pos[3]
+        viewer.cam.elevation = cam_pos[4]
+        viewer.cam.azimuth = cam_pos[5]
+        viewer.cam.trackbodyid = -1
