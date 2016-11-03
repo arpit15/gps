@@ -55,14 +55,17 @@ agent = {
     'substeps': 5,
     'conditions': common['conditions'],
     'pos_body_idx': np.array([1]),
-    'pos_body_offset': [np.array([0, 0.2, 0]), np.array([0, 0.1, 0]),
-                        np.array([0, -0.1, 0]), np.array([0, -0.2, 0])],
+    'pos_body_offset': [
+                        [np.array([0.1, 0.1, 0])],
+                        [np.array([0.1, -0.1, 0])],
+                        [np.array([-0.1, -0.1, 0])], 
+                        [np.array([-0.1, 0.1, 0])]
+                        ],
     'T': 100,
     'sensor_dims': SENSOR_DIMS,
     'state_include': [JOINT_ANGLES, JOINT_VELOCITIES, END_EFFECTOR_POINTS,
                       END_EFFECTOR_POINT_VELOCITIES],
     'obs_include': [],
-    'camera_pos': np.array([0., 0., 2., 0., 0.2, 0.5]),
 }
 
 algorithm = {

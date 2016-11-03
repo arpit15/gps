@@ -74,8 +74,12 @@ agent = {
     'train_conditions': common['train_conditions'],
     'test_conditions': common['test_conditions'],
     'pos_body_idx': np.array([1]),
-    'pos_body_offset': [np.array([0.0, 0.12, 0]), np.array([0.0, -0.08, 0]),
-                        np.array([-0.2, -0.08, 0]), np.array([-0.2, 0.12, 0])],
+    'pos_body_offset': [
+                    [np.array([0.1, 0.1, 0])],
+                    [np.array([0.1, -0.1, 0])],
+                    [np.array([-0.1, -0.1, 0])], 
+                    [np.array([-0.1, 0.1, 0])]
+                    ],
     'T': 100,
     'sensor_dims': SENSOR_DIMS,
     'state_include': [JOINT_ANGLES, JOINT_VELOCITIES, END_EFFECTOR_POINTS,
@@ -85,7 +89,7 @@ agent = {
     'image_width': IMAGE_WIDTH,
     'image_height': IMAGE_HEIGHT,
     'image_channels': IMAGE_CHANNELS,
-    'camera_pos': np.array([0., 0., 2., 0., 0.2, 0.5]),
+    'camera_pos': np.array([0., 0., 0., 2., -90, +90]),
 }
 
 algorithm = {
