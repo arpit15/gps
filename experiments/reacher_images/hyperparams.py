@@ -92,7 +92,6 @@ agent = {
     'image_height': IMAGE_HEIGHT,
     'image_channels': IMAGE_CHANNELS,
     'sensor_dims': SENSOR_DIMS,
-    #'camera_pos': np.array([0., 0., 1.5, 0., 0., 0.]),
     'camera_pos': np.array([0., 0., 0., 1., -90., 90.]),
     'record_reward': True,
 }

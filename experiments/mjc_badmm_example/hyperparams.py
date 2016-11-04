@@ -75,6 +75,7 @@ agent = {
                       END_EFFECTOR_POINT_VELOCITIES],
     'obs_include': [JOINT_ANGLES, JOINT_VELOCITIES, END_EFFECTOR_POINTS,
                     END_EFFECTOR_POINT_VELOCITIES],
+    'camera_pos': np.array([0., 0., 0., 1., -90., 90.]),
 }
 
 algorithm = {
