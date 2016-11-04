@@ -94,25 +94,11 @@ Here are the instructions for setting up [Pybox2D](https://github.com/pybox2d/py
 
 **MuJoCo Setup** (optional)
 
-In addition to the dependencies listed above, [OpenSceneGraph](http://www.openscenegraph.org/)(v3.0.1+) is also needed. It can be installed by running `sudo apt-get install openscenegraph libopenscenegraph-dev`.
 
-1. [Install MuJoCo](https://www.roboti.us/) (v1.22+) and place the downloaded `mjpro` directory into `gps/src/3rdparty`.
-MuJoCo is a high-quality physics engine and requires requires a license.
-Obtain a key, which should be named `mjkey.txt`, and place the key into the `mjpro` directory.
+1. [Install mujoco_py from OpenAI](https://github.com/openai/mujoco-py/) 
+Follow the instructions in the README of the above repository to set up MuJoCo and `mujoco_py`. MuJoCo is physics engine (which requires a license key) and mujoco_py are python bindings that wrap around MuJoCo's C/C++ API.
+2. Remeber to source `~/.bashrc` after you have completed the above installation. 
 
-2. Build `gps/src/3rdparty` by running:
-    ```sh
-    cd gps/build
-    cmake ../src/3rdparty
-    make -j
-    ```
-
-3. Set up paths by adding the following to your `~/.bashrc` file:
-    ```sh
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/gps/build/lib
-    export PYTHONPATH=$PYTHONPATH:/path/to/gps/build/lib
-    ```
-    Don't forget to run `source ~/.bashrc` afterward.
 
 **ROS Setup** (optional)
 
