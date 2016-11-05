@@ -243,7 +243,7 @@ class AgentMuJoCo(Agent):
         if RGB_IMAGE in self.obs_data_types or CONTEXT_IMAGE in self.obs_data_types:
             img_string, width, height = self._viewer[condition].get_image()
             img = np.fromstring(img_string, dtype='uint8').reshape(height, width, 3)[::-1,:,:]
-            img_data = img.flatten()
+            img_data = np.transpose(img, (2, 1, 0)).flatten()
 
         # if initial image is an observation, replicate it for each time step
         if CONTEXT_IMAGE in self.obs_data_types:
@@ -252,10 +252,10 @@ class AgentMuJoCo(Agent):
             from scipy.misc import imresize
             img_string, width, height = self._viewer_main.get_image()
             img = np.fromstring(img_string, dtype='uint8').reshape(height, width, 3)[::-1,:,:]
-            img = imresize(img, (self._hyperparams['image_width'],
-                                self._hyperparams['image_height']), 
+            img = imresize(img, (self._hyperparams['image_height'],
+                                self._hyperparams['image_width']), 
                                 interp='bilinear')
-            img_data = img.flatten()
+            img_data = np.transpose(img, (2, 1, 0)).flatten()
             sample.set(CONTEXT_IMAGE, img_data, t=None)
         sample.set(CONTEXT_IMAGE_SIZE, np.array([self._hyperparams['image_channels'],
                                                 self._hyperparams['image_width'],
@@ -311,7 +311,8 @@ class AgentMuJoCo(Agent):
         if RGB_IMAGE in self.obs_data_types:
             img_string, width, height = self._viewer[condition].get_image()#CHANGES
             img = np.fromstring(img_string, dtype='uint8').reshape(height, width, 3)[::-1,:,:]
-            sample.set(RGB_IMAGE, img.flatten(), t=t+1)
+            img_data = np.transpose(img, (2, 1, 0)).flatten()
+            sample.set(RGB_IMAGE, img_data, t=t+1)
             if feature_fn is not None:
                 obs = sample.get_obs()  # Assumes that the rest of the observation has been populated
                 sample.set(IMAGE_FEAT, feature_fn(obs), t=t+1)
