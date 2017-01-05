@@ -47,6 +47,8 @@ def init_lqr(hyperparams):
     Fd, fc = guess_dynamics(config['init_gains'], config['init_acc'],
                             dX, dU, dt)
 
+    
+    ## according to paper notations r(paper) is L(code)
     # Setup a cost function based on stiffness.
     # Ltt = (dX+dU) by (dX+dU) - Hessian of loss with respect to
     # trajectory at a single timestep.

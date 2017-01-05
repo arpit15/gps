@@ -22,8 +22,8 @@ from gps.gui.config import generate_experiment_info
 SENSOR_DIMS = {
     JOINT_ANGLES: 7,
     JOINT_VELOCITIES: 7,
-    END_EFFECTOR_POINTS: 6,
-    END_EFFECTOR_POINT_VELOCITIES: 6,
+    END_EFFECTOR_POINTS: 3,
+    END_EFFECTOR_POINT_VELOCITIES: 3,
     ACTION: 7,
 }
 
@@ -49,9 +49,10 @@ if not os.path.exists(common['data_files_dir']):
 agent = {
     'type': AgentMuJoCo,
     'filename': './mjc_models/pr2_arm3d.xml',
-    'x0': np.concatenate([np.array([0.1, 0.1, -1.54, -1.7, 1.54, -0.2, 0]),
-                          np.zeros(7)]),
-    'dt': 0.05,
+    # 'x0': np.concatenate([np.array([0.1, 0.1, -1.54, -1.7, 1.54, -0.2, 0]),
+    #                       np.zeros(7)]),
+    'x0': np.zeros(14),
+    'dt': 0.05,                                 #iterations
     'substeps': 5,
     'conditions': common['conditions'],
     'pos_body_idx': np.array([1]),
@@ -66,14 +67,15 @@ agent = {
     'state_include': [JOINT_ANGLES, JOINT_VELOCITIES, END_EFFECTOR_POINTS,
                       END_EFFECTOR_POINT_VELOCITIES],
     'obs_include': [],
-    'camera_pos': np.array([0., 0., 0., 1., -90., 90.]),
+    # 'camera_pos': np.array([0., 0., 0., 1., -90., 90.]),
+    'camera_pos': np.array([0., 0.5, 0.5, 2.0, -45., -45.]),
 
 }
 
 algorithm = {
     'type': AlgorithmTrajOpt,
     'conditions': common['conditions'],
-    'iterations': 10,
+    'iterations': 50,
 }
 
 algorithm['init_traj_distr'] = {
@@ -81,8 +83,8 @@ algorithm['init_traj_distr'] = {
     'init_gains':  1.0 / PR2_GAINS,
     'init_acc': np.zeros(SENSOR_DIMS[ACTION]),
     'init_var': 1.0,
-    'stiffness': 1.0,
-    'stiffness_vel': 0.5,
+    'stiffness': 1.0,                           ##what does this param do?
+    'stiffness_vel': 0.5,                       ##what does this param do?
     'dt': agent['dt'],
     'T': agent['T'],
 }
@@ -95,8 +97,10 @@ torque_cost = {
 fk_cost = {
     'type': CostFK,
     # 'target_end_effector': np.array([0.0, 0.3, -0.5, 0.0, 0.3, -0.2]),
-    'target_end_effector': np.array([0.2, 0.2, -0.2, 0.0, 0.2, -0.25]),         #pr2 with boxes
-    'wp': np.array([1, 1, 1, 1, 1, 1]),
+    # 'target_end_effector': np.array([-0.1, 0.40, -0.3, -0.1, 0.40, -0.272]),         #pr2 with boxes
+    # 'wp': np.array([1, 1, 1, 1, 1, 1]),
+    'target_end_effector': np.array([0.025, 0.2, -0.25]),
+    'wp': np.array([1, 1, 1]),
     'l1': 0.1,
     'l2': 10.0,
     'alpha': 1e-5,

@@ -72,8 +72,12 @@ class AgentMuJoCo(Agent):
             ## to apply force steps here
             self._model[i].step()
 
-        self._joint_idx = list(range(self._model[0].nq))
-        self._vel_idx = [i + self._model[0].nq for i in self._joint_idx]
+        ## HACK
+        # self._joint_idx = list(range(self._model[0].nq))
+        # self._vel_idx = [i + self._model[0].nq for i in self._joint_idx]
+
+        self._joint_idx = list(range(7))
+        self._vel_idx = [i + 7 for i in self._joint_idx]
 
         # Initialize x0.
         self.x0 = []
@@ -100,13 +104,11 @@ class AgentMuJoCo(Agent):
                 self.x0[i] = np.concatenate([self.x0[i], np.zeros((self._hyperparams['sensor_dims'][IMAGE_FEAT],))])
 
 
-        # print self.x0[i].shape
-
 
         cam_pos = self._hyperparams['camera_pos']
         self._viewer_main = mujoco_py.MjViewer(visible=True, init_width=AGENT_MUJOCO['image_width'], 
                     init_height=AGENT_MUJOCO['image_height'])
-        #self._viewer_main.start()
+
 
         if RGB_IMAGE in self.obs_data_types or CONTEXT_IMAGE in self.obs_data_types:
             self._viewer_bot = mujoco_py.MjViewer(visible=True, init_width=AGENT_MUJOCO['image_width'], 
@@ -198,7 +200,10 @@ class AgentMuJoCo(Agent):
                     ##TODO: to apply force steps here
                     self._model[condition].step()
                 #TODO: Some hidden state stuff will go here.
-                mj_X = np.concatenate([self._model[condition].data.qpos, self._model[condition].data.qvel]).flatten()
+
+                ## HACK
+                # mj_X = np.concatenate([self._model[condition].data.qpos, self._model[condition].data.qvel]).flatten()
+                mj_X = np.concatenate([self._model[condition].data.qpos[:7], self._model[condition].data.qvel[:7]]).flatten()
                 self._data = self._model[condition].data
                 self._set_sample(new_sample, mj_X, t, condition, feature_fn=feature_fn)
         new_sample.set(ACTION, U)
@@ -217,8 +222,16 @@ class AgentMuJoCo(Agent):
         # Initialize world/run kinematics
         x0 = self._hyperparams['x0'][condition]
         idx = len(x0) // 2
-        self._model[condition].data.qpos = x0[:idx]
-        self._model[condition].data.qvel = x0[idx:]
+        ## HACK
+        # self._model[condition].data.qpos = x0[:idx]
+        # self._model[condition].data.qvel = x0[idx:]
+        x0_extended = np.zeros_like(self._model[condition].data.qpos)
+        x0_extended[:7] = x0[:idx, np.newaxis]
+        v0_extended = np.zeros_like(self._model[condition].data.qvel)
+        v0_extended[:7] = x0[idx:, np.newaxis]
+        self._model[condition].data.qpos = x0_extended
+        self._model[condition].data.qvel = v0_extended
+
         mjlib.mj_kinematics(self._model[condition].ptr, self._model[condition].data.ptr)
         mjlib.mj_comPos(self._model[condition].ptr, self._model[condition].data.ptr)
         mjlib.mj_tendon(self._model[condition].ptr, self._model[condition].data.ptr)
@@ -237,8 +250,9 @@ class AgentMuJoCo(Agent):
 
         # Initialize sample with stuff from _data
         data = self._model[condition].data
-        sample.set(JOINT_ANGLES, data.qpos.flatten(), t=0)
-        sample.set(JOINT_VELOCITIES, data.qvel.flatten(), t=0)
+        ## HACK
+        sample.set(JOINT_ANGLES, data.qpos[:7].flatten(), t=0)
+        sample.set(JOINT_VELOCITIES, data.qvel[:7].flatten(), t=0)
         eepts = data.site_xpos.flatten()
         sample.set(END_EFFECTOR_POINTS, eepts, t=0)
         sample.set(END_EFFECTOR_POINT_VELOCITIES, np.zeros_like(eepts), t=0)
@@ -304,6 +318,7 @@ class AgentMuJoCo(Agent):
             condition: Which condition to set.
             feature_fn: function to compute image features from the observation.
         """
+        ## HACK
         sample.set(JOINT_ANGLES, np.array(mj_X[self._joint_idx]), t=t+1)
         sample.set(JOINT_VELOCITIES, np.array(mj_X[self._vel_idx]), t=t+1)
         curr_eepts = self._data.site_xpos.flatten()

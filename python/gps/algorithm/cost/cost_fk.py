@@ -50,12 +50,15 @@ class CostFK(Cost):
         # Choose target.
         tgt = self._hyperparams['target_end_effector']
         pt = sample.get(END_EFFECTOR_POINTS)
-        print pt
+        # print pt
         dist = pt - tgt
         # TODO - These should be partially zeros so we're not double
         #        counting.
         #        (see pts_jacobian_only in matlab costinfos code)
-        jx = sample.get(END_EFFECTOR_POINT_JACOBIANS)
+        jx_full = sample.get(END_EFFECTOR_POINT_JACOBIANS)
+        
+        ## HACK
+        jx = jx_full[:,:,:7].copy()
 
         # Evaluate penalty term. Use estimated Jacobians and no higher
         # order terms.
