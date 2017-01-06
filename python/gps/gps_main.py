@@ -31,6 +31,7 @@ class GPSMain(object):
         """
         self._quit_on_end = quit_on_end
         self._hyperparams = config
+
         self._conditions = config['common']['conditions']
         if 'train_conditions' in config['common']:
             self._train_idx = config['common']['train_conditions']
@@ -43,7 +44,9 @@ class GPSMain(object):
 
         self._data_files_dir = config['common']['data_files_dir']
 
+        
         self.agent = config['agent']['type'](config['agent'])
+        
         self.data_logger = DataLogger()
         self.gui = GPSTrainingGUI(config['common']) if config['gui_on'] else None
 
@@ -74,6 +77,7 @@ class GPSMain(object):
             self.agent.clear_samples()
 
             self._take_iteration(itr, traj_sample_lists)
+            
             pol_sample_lists = self._take_policy_samples()
             self._log_data(itr, traj_sample_lists, pol_sample_lists)
 
@@ -217,6 +221,7 @@ class GPSMain(object):
             N  : number of policy samples to take per condition
         Returns: None
         """
+        
         if 'verbose_policy_trials' not in self._hyperparams:
             # AlgorithmTrajOpt
             return None
@@ -227,6 +232,7 @@ class GPSMain(object):
         # Since this isn't noisy, just take one sample.
         # TODO: Make this noisy? Add hyperparam?
         # TODO: Take at all conditions for GUI?
+        
         for cond in range(len(self._test_idx)):
             pol_samples[cond][0] = self.agent.sample(
                 self.algorithm.policy_opt.policy, self._test_idx[cond],

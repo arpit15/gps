@@ -1,0 +1,111 @@
+<mujoco model="baxterarm3d">
+
+    <compiler inertiafromgeom="true" angle="radian" coordinate="local" />
+    <option timestep="0.01" gravity="0 0 0" iterations="20" integrator="RK4" />
+    <default>
+        <joint armature="0.04" damping="1" limited="true" />
+        <geom friction=".5 .1 .1" margin="0.002" condim="1" contype="0" conaffinity="0" />
+    </default>
+
+    <worldbody>
+        <light diffuse=".5 .5 .5" pos="0 0 3" dir="0 0 -1"/> 
+        <body name="right_arm_mount" pos="0.024645 -0.219645 0.118588" quat="0.923879 0 0 -0.382684">
+            <geom name="e1" type="sphere" rgba="0.6 0.6 0.6 1" pos="-0.06 0.05 0.2" size="0.05" />
+            <geom name="e2" type="sphere" rgba="0.6 0.6 0.6 1" pos=" 0.06 0.05 0.2" size="0.05" />
+            <geom name="e1p" type="sphere" rgba="0.1 0.1 0.1 1" pos="-0.06 0.09 0.2" size="0.03" />
+            <geom name="e2p" type="sphere" rgba="0.1 0.1 0.1 1" pos=" 0.06 0.09 0.2" size="0.03" />
+            <geom name="sp" type="capsule" fromto="0 0 -0.4 0 0 0.2" size="0.1" />
+            <joint name="right_s0" type="hinge" limited="true" pos="0 0 0" axis="0 0 1" range="-1.70168 1.70168"/>
+
+            <body name="right_upper_shoulder" pos="0.055695 0 0.011038">
+                <geom name="sl" type="capsule" fromto="0 -0.1 0 0 0.1 0" size="0.02" />
+                <joint name="right_s1" type="hinge" limited="true" pos="0 0 0" axis="0 0 1" range="-2.147 1.047"/>
+
+                <body name="right_lower_shoulder" pos="0.069 0 0.27035" quat="0.707107 -0.707107 0 0">
+                    <geom name="uar" type="capsule" fromto="-0.1 0 0 0.1 0 0" size="0.02" />
+                    <joint name="right_e0" type="hinge" limited="true" pos="0 0 0" axis="0 0 1" range="-3.05418 3.05418"/>
+
+                    
+                    <body name="right_lower_elbow" pos="0.069 0 0.26242" quat="0.5 -0.5 -0.5 -0.5">
+                        <geom name="ef" type="capsule" fromto="0 -0.02 0 0.0 0.02 0" size="0.02" />
+                        <joint name="right_e1" type="hinge" limited="true" pos="0 0 0" axis="0 0 1" range="-0.05 2.618"/>
+
+                        <body name="right_upper_forearm" pos="0.10359 0 0" quat="0.5 0.5 0.5 0.5">
+                            <geom name="fr" type="capsule" fromto="-0.1 0 0 0.1 0 0" size="0.02" />
+                            <joint name="right_w0" type="hinge" limited="true" pos="0 0 0" axis="0 0 1" range="-3.059 3.059"/>
+
+                            
+                            <body name="right_lower_forearm" pos="0.01 0 0.2707" quat="0.5 -0.5 -0.5 -0.5">
+                                <geom name="wf" type="capsule" fromto="0 -0.02 0 0 0.02 0" size="0.01" />
+                                <joint name="right_w1" type="hinge" limited="true" pos="0 0 0" axis="0 0 1" range="-1.5708 2.094"/>
+
+                                <body name="right_wrist" pos="0.115975 0 0" quat="0.5 0.5 0.5 0.5">
+                                    <geom name="wr" type="capsule" fromto="-0.02 0 0 0.02 0 0" size="0.01" />
+                                    <joint name="right_w2" type="hinge" limited="true" pos="0 0 0" axis="0 0 1" range="-3.059 3.059"/>
+
+                                    <body name="right_hand" pos="0 0 0.11355">
+                                        <geom name="pl" type="capsule" fromto="0.05 0 -0.02 0.05 0 0.02" size="0.05" />
+
+                                        <body name="r_gripper_tool_frame" pos="0.18 0 0">
+                                            <site name="leg_bottom" pos="0 0 -0.15" size="0.01" />
+                                            <site name="leg_top" pos="0 0 0.15" size="0.01" />
+
+                                            <body name="ball" pos="0 0 0">
+                                                <geom name="ball_geom" rgba="0.8 0.6 0.6 1" type="cylinder" fromto="0 0 -0.15 0 0 0.15" size="0.028" density="2000" contype="2" conaffinity="1" />
+                                            </body>
+                                        </body>
+
+                                        <body name="right_gripper_base" pos="0 0 0.025">
+                                            <geom name="gf3" type="capsule" fromto="0 0 0 0.09137 0.00495 0" size="0.01" />
+
+                                            <body name="r_gripper_l_finger" pos="0 -0.0015 0.02">
+                                                <geom name="gf4" type="capsule" fromto="0 0 0 0.09137 0.0 0" size="0.01" />
+                                                <!-- <joint name="r_gripper_l_finger_joint" pos="0 0 0" axis="0 1 0" type="slide" range="0 0.020833" /> -->
+                                                
+                                                <body name="r_gripper_l_finger_tip" pos="0 0.01725 0.1127">
+
+                                                </body>
+                                            </body>
+
+                                            <body name="r_gripper_r_finger" pos="0 0.0015 0.02">
+                                                <geom name="gf5" type="capsule" fromto="0 0 0 0.09137 0.0 0" size="0.01" />
+                                                <!-- <joint name="r_gripper_r_finger_joint" pos="0 0 0" axis="0 1 0" type="slide" range="-0.020833 0" /> -->
+
+                                                <body name="r_gripper_r_finger_tip" pos="0 -0.01725 0.1127">
+                                                    
+                                                </body>
+                                            </body>
+
+                                        </body>
+
+                                        
+                                    </body>
+                                </body>
+                            </body>
+                        </body>
+                    </body>
+                </body>
+            </body>
+        </body>
+      
+        <body name="w1" pos="0.0 0.15 -0.35">
+            <geom name="w1" rgba="0.2 0.2 0.2 1" type="box" size="0.05 0.05 0.05" contype="1" conaffinity="1" />
+        </body>
+
+        <body name="w2" pos="0.0 0.3 -0.45">
+            <geom name="w2" rgba="0.2 0.2 0.2 1" type="box" size="0.3 0.3 0.05" contype="1" conaffinity="1" />
+        </body>
+
+    </worldbody>
+
+    <actuator>
+        <motor joint="right_s0" ctrlrange="-100.0 100.0" ctrllimited="true" />
+        <motor joint="right_s1" ctrlrange="-100.0 100.0" ctrllimited="true" />
+        <motor joint="right_e0" ctrlrange="-100.0 100.0" ctrllimited="true" />
+        <motor joint="right_e1" ctrlrange="-100.0 100.0" ctrllimited="true" />
+        <motor joint="right_w0" ctrlrange="-100.0 100.0" ctrllimited="true" />
+        <motor joint="right_w1" ctrlrange="-100.0 100.0" ctrllimited="true" />
+        <motor joint="right_w2" ctrlrange="-100.0 100.0" ctrllimited="true" />
+    </actuator>
+
+</mujoco>

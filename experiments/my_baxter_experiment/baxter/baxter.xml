@@ -34,10 +34,10 @@
 		<mesh name="W0" file="upper_forearm/W0.STL"/>
 		<mesh name="W1" file="lower_forearm/W1.STL"/>
 		<mesh name="W2" file="wrist/W2.STL"/>
-		<mesh name="half_round_tip" file="electric_gripper/fingers/half_round_tip.stl" />
-		<mesh name="electric_gripper_base" file="electric_gripper/electric_gripper_base.stl" />
-        <mesh name="extended_narrow" file="electric_gripper/fingers/extended_narrow.stl"/>
-        <mesh name="paddle_tip" file="electric_gripper/fingers/paddle_tip.stl"/>        
+		<mesh name="half_round_tip" file="electric_gripper/fingers/half_round_tip.STL" />
+		<mesh name="electric_gripper_base" file="electric_gripper/electric_gripper_base.STL" />
+        <mesh name="extended_narrow" file="electric_gripper/fingers/extended_narrow.STL"/>
+        <mesh name="paddle_tip" file="electric_gripper/fingers/paddle_tip.STL"/>        
    </asset>
 
 	<visual>

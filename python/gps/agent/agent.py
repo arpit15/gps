@@ -6,6 +6,7 @@ from gps.agent.config import AGENT
 from gps.proto.gps_pb2 import ACTION
 from gps.sample.sample_list import SampleList
 
+from pdb import set_trace
 
 class Agent(object):
     """
@@ -226,6 +227,7 @@ class Agent(object):
                 raise ValueError('Axes must be along an dX=%d dimensional axis',
                                  self.dX)
             insert_shape[axes[i]] = len(self._x_data_idx[data_types[i]])
+        
         if tuple(insert_shape) != data_to_insert.shape:
             raise ValueError('Data has shape %s. Expected %s',
                              data_to_insert.shape, tuple(insert_shape))

@@ -45,6 +45,9 @@ class Algorithm(object):
         init_traj_distr['x0'] = agent.x0
         init_traj_distr['dX'] = agent.dX
         init_traj_distr['dU'] = agent.dU
+        
+        # print (agent.x0[0].shape), agent.x0
+
         del self._hyperparams['agent']  # Don't want to pickle this.
 
         # IterationData objects for each condition.

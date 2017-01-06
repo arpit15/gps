@@ -7,6 +7,7 @@ from gps.algorithm.dynamics.dynamics_utils import guess_dynamics
 from gps.algorithm.policy.lin_gauss_policy import LinearGaussianPolicy
 from gps.algorithm.policy.config import INIT_LG_PD, INIT_LG_LQR
 
+from pdb import set_trace
 
 def init_lqr(hyperparams):
     """
@@ -19,6 +20,7 @@ def init_lqr(hyperparams):
     x0, dX, dU = config['x0'], config['dX'], config['dU']
     dt, T = config['dt'], config['T']
 
+    # print x0.shape, dX, dU
     #TODO: Use packing instead of assuming which indices are the joint
     #      angles.
 
@@ -54,6 +56,7 @@ def init_lqr(hyperparams):
         np.zeros(dX - dU*2), np.ones(dU)
     ]))
     Ltt = Ltt / config['init_var']  # Cost function - quadratic term.
+    # set_trace()
     lt = -Ltt.dot(np.r_[x0, np.zeros(dU)])  # Cost function - linear term.
 
     # Perform dynamic programming.

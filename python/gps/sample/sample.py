@@ -3,6 +3,7 @@ import numpy as np
 
 from gps.proto.gps_pb2 import ACTION
 
+from pdb import set_trace
 
 class Sample(object):
     """
@@ -59,6 +60,7 @@ class Sample(object):
                     continue
                 data = (self._data[data_type] if t is None
                         else self._data[data_type][t, :])
+                # print data_type
                 self.agent.pack_data_x(X, data, data_types=[data_type])
         return X
 

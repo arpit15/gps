@@ -50,6 +50,7 @@ class CostFK(Cost):
         # Choose target.
         tgt = self._hyperparams['target_end_effector']
         pt = sample.get(END_EFFECTOR_POINTS)
+        print pt
         dist = pt - tgt
         # TODO - These should be partially zeros so we're not double
         #        counting.

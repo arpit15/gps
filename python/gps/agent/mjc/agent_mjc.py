@@ -18,6 +18,7 @@ from gps.proto.gps_pb2 import JOINT_ANGLES, JOINT_VELOCITIES, \
 
 from gps.sample.sample import Sample
 
+from pdb import set_trace
 
 class AgentMuJoCo(Agent):
     """
@@ -28,7 +29,9 @@ class AgentMuJoCo(Agent):
         config = copy.deepcopy(AGENT_MUJOCO)
         config.update(hyperparams)
         Agent.__init__(self, config)
+        # print (self.x0[0].shape)
         self._setup_conditions()
+        # print (self.x0[0].shape)
         self._setup_world(hyperparams['filename'])
 
     def _setup_conditions(self):
@@ -39,6 +42,7 @@ class AgentMuJoCo(Agent):
         conds = self._hyperparams['conditions']
         for field in ('x0', 'x0var', 'pos_body_idx', 'pos_body_offset',
                       'noisy_body_idx', 'noisy_body_var', 'filename'):
+            # print field
             self._hyperparams[field] = setup(self._hyperparams[field], conds)
 
     def _setup_world(self, filename):
@@ -64,6 +68,8 @@ class AgentMuJoCo(Agent):
                 idx = self._hyperparams['pos_body_idx'][i][j]
                 temp[idx, :] = temp[idx, :] + self._hyperparams['pos_body_offset'][i][j] #TODO should be [i][j]
             self._model[i].body_pos = temp
+            
+            ## to apply force steps here
             self._model[i].step()
 
         self._joint_idx = list(range(self._model[0].nq))
@@ -72,10 +78,12 @@ class AgentMuJoCo(Agent):
         # Initialize x0.
         self.x0 = []
         for i in range(self._hyperparams['conditions']):
+            
             if END_EFFECTOR_POINTS in self.x_data_types:
                 # TODO: this assumes END_EFFECTOR_VELOCITIES is also in datapoints right?
                 self._init(i)
                 eepts = self._model[i].data.site_xpos.flatten()
+
                 self.x0.append(
                     np.concatenate([self._hyperparams['x0'][i], eepts, np.zeros_like(eepts)])
                 )
@@ -90,6 +98,9 @@ class AgentMuJoCo(Agent):
                 self.x0.append(self._hyperparams['x0'][i])
             if IMAGE_FEAT in self.x_data_types:
                 self.x0[i] = np.concatenate([self.x0[i], np.zeros((self._hyperparams['sensor_dims'][IMAGE_FEAT],))])
+
+
+        # print self.x0[i].shape
 
 
         cam_pos = self._hyperparams['camera_pos']
@@ -114,6 +125,7 @@ class AgentMuJoCo(Agent):
 
                 for j in range(5):
                     self._viewer[i].render()
+
 
 
 
@@ -167,12 +179,15 @@ class AgentMuJoCo(Agent):
 
         # Take the sample.
         for t in range(self.T):
+            # print t
+            # set_trace()
             X_t = new_sample.get_X(t=t)
             obs_t = new_sample.get_obs(t=t)
             mj_U = policy.act(X_t, obs_t, t, noise[t, :])
             U[t, :] = mj_U
             if verbose:
                 self._viewer_main.loop_once()
+                # set_trace()
                 if RGB_IMAGE in self.obs_data_types or CONTEXT_IMAGE in self.obs_data_types:
                     self._viewer_bot.loop_once()
                     self._viewer[condition].loop_once()
@@ -180,6 +195,7 @@ class AgentMuJoCo(Agent):
             if (t + 1) < self.T:
                 for _ in range(self._hyperparams['substeps']):
                     self._model[condition].data.ctrl = mj_U
+                    ##TODO: to apply force steps here
                     self._model[condition].step()
                 #TODO: Some hidden state stuff will go here.
                 mj_X = np.concatenate([self._model[condition].data.qpos, self._model[condition].data.qvel]).flatten()
